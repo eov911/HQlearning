@@ -41,6 +41,7 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
+
 class Subscribe(models.Model):
     user = models.ForeignKey(
         User,
@@ -65,3 +66,27 @@ class Subscribe(models.Model):
 
     def __str__(self):
         return f'{self.user} подписался на курс "{self.recipe}".'
+
+
+class Learning_Lessons(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='lessons',
+        verbose_name='Ученик',
+    )
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.CASCADE,
+        related_name='lessons',
+        verbose_name='Урок',
+    )
+    done = models.BooleanField()
+
+    class Meta:
+        verbose_name = 'Пройденный урок'
+        verbose_name_plural = 'Пройденные уроки'
+        constraints = [
+            UniqueConstraint(fields=['user', 'lesson'],
+                             name='unique_lesson')
+        ]
